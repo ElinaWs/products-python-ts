@@ -8,13 +8,15 @@ export const LoginPage = () => {
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
 
-    const handleLogin = async() => {
-        const loginBody = {
-            email,
-            password
-        }
+    const handleLogin = async(event: React.SubmitEvent<HTMLFormElement>) => {
+        event.preventDefault()
         try {
-            const response = await axiosApi.post('users/')
+            const response = await axiosApi.post(`users/login?email=${email}&password=${password}`)
+            const data = response.data
+            if (data.access_token) {
+                localStorage.setItem('token', data.access_token)
+                navigate('/')
+            }
         } catch (e) {
             console.log (e)
         }
